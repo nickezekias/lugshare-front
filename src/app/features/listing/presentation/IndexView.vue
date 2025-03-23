@@ -66,12 +66,14 @@ onMounted(async () => {
           <div v-if="loading" class="flex flex-col gap-4">
             <PrimeSkeleton v-for="i in 3" :key="i" width="100%" height="18rem" />
           </div>
-          <SpaceOfferItemCard
+          <router-link
             v-else
             v-for="obj in objStore.spaceListings"
             :key="obj.id"
-            :data="ObjOffer.fromObject(obj)"
-          />
+            :to="`/listings/show/${obj.id}`"
+          >
+            <SpaceOfferItemCard class="cursor-pointer" :data="ObjOffer.fromObject(obj)" />
+          </router-link>
         </div>
 
         <div class="w-full flex flex-col gap-6">
