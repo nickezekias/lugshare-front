@@ -151,11 +151,8 @@ async function onDeleteItem() {
             class="w-full flex-grow"
           />
 
-          <div class="flex ms-auto gap-2">
-            <router-link
-              v-if="accountStore.user?.id == props.data.user?.id"
-              :to="`/listings/edit/${props.data.id}`"
-            >
+          <div v-if="accountStore.user?.id == props.data.user?.id" class="flex ms-auto gap-2">
+            <router-link :to="`/listings/edit/${props.data.id}`">
               <PrimeButton text severity="info" icon="pi pi-pencil" />
             </router-link>
             <PrimeButton @click="isDeleteDialog = true" severity="danger" text icon="pi pi-trash" />
