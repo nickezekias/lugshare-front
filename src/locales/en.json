@@ -9,6 +9,12 @@
       "http500": "An error occurred on our end. Reload the page, and if the problem persists, contact admin"
     }
   },
+  "constants": {
+    "statuses": {
+      "available": "Available",
+      "open": "Open"
+    }
+  },
   "errors": {
     "validation": {
       "email": "Email must be valid",
@@ -131,6 +137,10 @@
           "title": "Edit Luggage Space Request",
           "titleDesc": "Edit your luggage space request details"
         }
+      },
+      "show": {
+        "title": "Space Details",
+        "titleDesc": "View the details of the luggage space offer or request"
       }
     },
     "onboarding": {
@@ -140,6 +150,16 @@
     "profile": {
       "userProfile": "User Profile",
       "userProfileDesc": "A centralized place for personal customization"
+    },
+    "spaceBookingRequests": {
+      "create": {
+        "itemsPickupDateHint": "Specify the date at which the shipment items can be picked up by the traveler",
+        "itemsPickupLocationHint": "Specify the location(s) where the shipment items can be picked up by the traveler",
+        "shipmentItemsHint": "List all the items you would like to ship while precising name, weight and dimensions (if available)",
+        "successDesc": "Space booking request created successfully",
+        "title": "Book Space",
+        "titleDesc": "Book a space to transport your items"
+      }
     }
   },
 
@@ -157,6 +177,7 @@
   "labels": {
     "abbreviation": "Abbreviation",
     "about": "About",
+    "accept": "Accept",
     "account": "Account",
     "address": "Address",
     "age": "Age",
@@ -179,13 +200,14 @@
     "contactShipper": "Contact Shipper",
     "country": "Country",
     "dashboard": "Dashboard",
-    "date": "Date",
+    "date": "Date | Dates",
     "delete": "Delete",
     "deliveryPreference": "Delivery Preference",
     "departure": "Departure",
     "departureAndDestination": "Departure & Destination",
     "departureDate": "Departure Date",
     "description": "Description",
+    "desiredWeight": "Desired Weight",
     "desiredWeightForUnit": "Desired Weight ({unit})",
     "edit": "Edit",
     "email": "Email",
@@ -217,6 +239,7 @@
     "newPassword": "New Password",
     "next": "Next",
     "notification": "Notification | Notifications",
+    "noSpaceBookingRequests": "No Space Booking Requests Yet",
     "offer": "Offer | Offers",
     "offerSpace": "Offer Space",
     "operationFailure": "Operation Failure",
@@ -237,6 +260,7 @@
     "recentSpaceListings": "Recent Space Listings",
     "recentSpaceRequests": "Recent Space Requests",
     "register": "Register",
+    "reject": "Reject",
     "request": "Request | Requests",
     "requestSpace": "Request Space",
     "resetPassword": "Reset Password",
@@ -254,17 +278,23 @@
     "selectWeightUnit": "Select a Weight Unit",
     "selectWeight": "Select Weight",
     "setting": "Setting | Settings",
-    "shippingDetails": "Shipping Details",
     "shipmentArrivalDate": "Shipment Arrival Date",
+    "shipmentItems": "Shipment Items",
+    "shipmentItemsPickupDate": "Shipment Items Pickup Date",
+    "shipmentItemsPickupLocation(s)": "Shipment Items Pickup Location(s)",
+    "shippingDetails": "Shipping Details",
     "skip": "Skip",
+    "spaceBookingRequest": "Space Booking Request | Space Booking Requests",
     "spaceListing": "Space Listing | Space Listings",
     "spaceListings": "Space Listings",
     "spaceRequest": "Space Request | Space Requests",
     "spaceRequests": "Space Requests",
     "specialInstructions": "Special Instructions",
     "state": "State",
+    "status": "Status",
     "transaction": "Transaction | Transactions",
     "transactions": "Transactions",
+    "traveler": "Traveler | Travelers",
     "trustAndVerification": "Trust & Verification",
     "uploadIDDocument": "Upload ID Document",
     "userID": "User ID",
