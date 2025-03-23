@@ -8,11 +8,13 @@ const props = defineProps<{
   id: string
   disabled?: boolean
   errorHelpLabel: string | undefined
+  filled?: boolean
   hint?: string
   label?: string
   literalLabel?: string
   name?: string
   readonly?: boolean
+  rows?: number
   isError: boolean | undefined
 }>()
 </script>
@@ -28,6 +30,8 @@ const props = defineProps<{
         :id="props.id"
         :name="props.name"
         :readonly="props.readonly"
+        :rows="props.rows"
+        :variant="props.filled ? 'filled' : 'outlined'"
       />
       <label v-if="!props.literalLabel" :for="props.id">{{ $t(`${props.label}`) }}</label>
       <label v-else :for="props.id">{{ props.literalLabel }}</label>
