@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Form as PrimeForm, type FormSubmitEvent } from '@primevue/forms'
 import { useI18n } from 'vue-i18n'
 import { useListingStore } from '@/stores/listing.store'
@@ -8,6 +8,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { z } from 'zod'
 
 import NikkToast from '@/app/utils/NikkToast'
+import Obj from '@/app/models/spaceListing.model'
 
 import airlines from '@/assets/data/airlines.json'
 
@@ -36,6 +37,10 @@ const resolver = zodResolver(
     passengerLastName: z.string().min(1, { message: 'errors.validation.requiredField' }),
   }),
 )
+
+onMounted(() => {
+  listingStore.setSpaceListing(Obj.initEmpty())
+})
 
 function onFormSubmit(e: FormSubmitEvent) {
   const isFormCorrect = e.valid
