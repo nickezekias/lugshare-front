@@ -144,20 +144,21 @@ async function onDeleteItem() {
 
       <template #footer>
         <div class="flex gap-2">
-          <PrimeButton size="small" :label="$t('labels.bookSpace')" class="w-full flex-grow" />
+          <PrimeButton
+            v-if="!props.data.isOwner(accountStore.user?.id)"
+            size="small"
+            :label="$t('labels.bookSpace')"
+            class="w-full flex-grow"
+          />
 
-          <div class="flex gap-2" v-if="accountStore.user?.id == props.data.user?.id">
-            <router-link :to="`/listings/edit/${props.data.id}`">
-              <PrimeButton size="small" outlined rounded severity="info" icon="pi pi-pencil" />
+          <div class="flex ms-auto gap-2">
+            <router-link
+              v-if="accountStore.user?.id == props.data.user?.id"
+              :to="`/listings/edit/${props.data.id}`"
+            >
+              <PrimeButton text severity="info" icon="pi pi-pencil" />
             </router-link>
-            <PrimeButton
-              @click="isDeleteDialog = true"
-              size="small"
-              outlined
-              rounded
-              severity="danger"
-              icon="pi pi-trash"
-            />
+            <PrimeButton @click="isDeleteDialog = true" severity="danger" text icon="pi pi-trash" />
           </div>
         </div>
       </template>
