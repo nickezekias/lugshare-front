@@ -1,13 +1,6 @@
 import { WEIGHT_UNITS_LIST } from '@/app/constants'
 
-interface ListingOwner {
-  firstName: string
-  id: string
-  initials: string
-  lastName: string
-}
-
-export type { ListingOwner }
+import type ListingOwner from './listingOwner.interface'
 export default class SpaceListing {
   public static readonly DELIVERY_PREFERENCES = {
     AIRPORT_DROP_OFF: 'airportDropOff',
@@ -22,6 +15,12 @@ export default class SpaceListing {
     HAZARDOUS: 'hazardous',
     LIQUID: 'liquid',
     PERISHABLE: 'perishable',
+  }
+
+  public static readonly STATUSES = {
+    AVAILABLE: 'available',
+    UNAVAILABLE: 'unavailable',
+    INACTIVE: 'inactive',
   }
 
   public static readonly WEIGHT_UNITS = WEIGHT_UNITS_LIST
@@ -43,8 +42,10 @@ export default class SpaceListing {
   itemRestrictions: Array<string>
   pricePerUnit: string
   specialInstructions: string
+  status: string
   updatedAt: string
-  user: string | ListingOwner
+  user: ListingOwner | null
+  userId: string
   weightUnit: string
 
   public constructor(
@@ -65,8 +66,10 @@ export default class SpaceListing {
     deliveryPreferences: Array<string>,
     description: string,
     specialInstructions: string,
+    status: string,
     isActive: boolean,
-    user: string | ListingOwner,
+    user: ListingOwner | null,
+    userId: string,
     updatedAt: string,
   ) {
     this.createdAt = createdAt
@@ -86,8 +89,10 @@ export default class SpaceListing {
     this.deliveryPreferences = deliveryPreferences
     this.description = description
     this.specialInstructions = specialInstructions
+    this.status = status
     this.isActive = isActive
     this.user = user
+    this.userId = userId
     this.updatedAt = updatedAt
   }
 
@@ -109,8 +114,10 @@ export default class SpaceListing {
     deliveryPreferences: Array<string>
     description: string
     specialInstructions: string
+    status: string
     isActive: boolean
-    user: string | ListingOwner
+    user: ListingOwner | null
+    userId: string
     updatedAt: string
   }): SpaceListing {
     return new SpaceListing(
@@ -131,8 +138,10 @@ export default class SpaceListing {
       data.deliveryPreferences,
       data.description,
       data.specialInstructions,
+      data.status,
       data.isActive,
       data.user,
+      data.userId,
       data.updatedAt,
     )
   }
@@ -156,7 +165,9 @@ export default class SpaceListing {
       [],
       '',
       '',
+      SpaceListing.STATUSES.AVAILABLE,
       true,
+      null,
       '',
       '',
     )
@@ -166,8 +177,16 @@ export default class SpaceListing {
    * Returns the owner's first name and the first letter of his last name
    */
   public ownerShortName() {
-    if (!(typeof this.user === 'string')) {
+    if (this.user) {
       return `${this.user.firstName} ${this.user.lastName.charAt(0)}.`
     }
+    return ''
+  }
+
+  /**
+   * Check if user with userId is the owner of this resource
+   */
+  public isOwner(userId: string | undefined): boolean {
+    return userId == this.userId
   }
 }
