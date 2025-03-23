@@ -17,7 +17,7 @@ export const useListingStore = defineStore('listingStore', () => {
   const { updateObjectsList } = useDataTableUtil()
 
   function setSpaceListing(data: SpaceListing) {
-    spaceListing.value = data
+    spaceListing.value = SpaceListing.fromObject(data)
   }
 
   async function createSpaceOfferListing(data: SpaceListing) {
@@ -30,6 +30,7 @@ export const useListingStore = defineStore('listingStore', () => {
 
   async function getSpaceOfferListing(id: string) {
     const response = await objService.getSpaceOfferListing(id)
+    spaceListing.value = SpaceListing.fromObject(response.data.data)
     return response.data.data
   }
 
