@@ -4,6 +4,7 @@ import guest from './middleware/guest.middleware'
 
 import { useAppStore } from '@/stores/app.store'
 
+import NotFoundView from '@/app/features/errors/NotFoundView.vue'
 import GuestLayout from '@/layouts/guest/IndexLayout.vue'
 import auth from './middleware/auth.middleware'
 
@@ -101,6 +102,16 @@ const routes: Array<RouteRecordRaw> = [
         ],
       },
     ],
+  },
+  /*
+    404 route
+  */
+  { path: '/404', name: 'notFound', component: NotFoundView },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect(to) {
+      return { name: 'notFound', query: { redirect: to.fullPath } }
+    },
   },
 ]
 

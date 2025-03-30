@@ -43,7 +43,12 @@
       "welcome": "Welcome to the dashboard"
     },
     "errors": {
-      "404NotFound": "Oops! We can't find the page you're looking for."
+      "404NotFound": {
+        "goBack": "Go Back",
+        "goHome": "Go Home",
+        "title": "Page Not Found",
+        "message": "Oops! It seems the page you are looking for doesn't exist."
+      }
     },
     "listings": {
       "create": {
@@ -139,6 +144,7 @@
         }
       },
       "show": {
+        "backToListings": "Back to Listings",
         "title": "Space Details",
         "titleDesc": "View the details of the luggage space offer or request"
       }
