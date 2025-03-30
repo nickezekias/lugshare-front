@@ -23,12 +23,8 @@ const getApiErrors = (error: AxiosError, title = '') => {
     return error.response.data.errors
   }
 
-  // show custom controller error messages for errors other than http 500
-  if (error.response.status != 500) {
-    return error.response.data
-  }
-
-  return errorMessage
+  //@ts-expect-error data is of type unknown
+  return error.response.data.message
 }
 
 function getImageSrc(url: string) {
