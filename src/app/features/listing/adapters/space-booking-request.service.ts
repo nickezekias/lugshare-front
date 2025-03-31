@@ -27,6 +27,10 @@ const getAll = async function (filter?: DBGetQueryFilter) {
   return await axios.get(`${url}${query}`)
 }
 
+const getByCurrentUser = async function () {
+  return await axios.get(`${url}/current-user`)
+}
+
 const update = async function (payload: Obj) {
   return await axios.post(`${url}/${payload.id}?_method=PUT`, payload)
 }
@@ -43,4 +47,4 @@ const reject = async function (id: string) {
   return await axios.post(`${url}/${id}/reject?_method=PUT`)
 }
 
-export default { create, get, getAll, update, destroy, accept, reject }
+export default { create, get, getAll, getByCurrentUser, update, destroy, accept, reject }
