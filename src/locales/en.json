@@ -165,6 +165,14 @@
         "successDesc": "Space booking request created successfully",
         "title": "Book Space",
         "titleDesc": "Book a space to transport your items"
+      },
+      "delete": {
+        "confirmMessage": "Are you sure you want to cancel this space booking request? Note this action is irreversible!",
+        "successMessage": "Space booking request canceled successfully",
+        "title": "Cancel Space Booking Request"
+      },
+      "show": {
+        "requestedOn": "Requested On"
       }
     }
   },

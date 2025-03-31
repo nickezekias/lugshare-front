@@ -148,7 +148,7 @@ async function onDeleteItem() {
         <div class="flex gap-2">
           <PrimeButton size="small" :label="$t('labels.contactShipper')" class="w-full flex-grow" />
 
-          <div class="flex gap-2" v-if="accountStore.user?.id == props.data.user.id">
+          <div class="flex gap-2" v-if="accountStore.user?.id == props.data.user?.id">
             <router-link :to="`/listings/requests/edit/${props.data.id}`">
               <PrimeButton size="small" outlined rounded severity="info" icon="pi pi-pencil" />
             </router-link>

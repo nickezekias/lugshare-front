@@ -18,6 +18,8 @@ import NikkDatePicker from '@/components/forms/NikkDatePicker.vue'
 import NikkInputNumber from '@/components/forms/NikkInputNumber.vue'
 import NikkTextArea from '@/components/forms/NikkTextArea.vue'
 
+const emit = defineEmits(['created'])
+
 const accountStore = useAccountStore()
 const listingStore = useListingStore()
 const objStore = useSpaceBookingRequestStore()
@@ -55,9 +57,10 @@ async function onFormSubmit(e: FormSubmitEvent) {
     const payload: Obj = obj.value
     payload.spaceOfferId = listingStore.spaceListing.id
     try {
-      await objStore.create(payload)
+      const data = await objStore.create(payload)
       nikkToast.success('features.spaceBookingRequests.create.successDesc')
       clearForm()
+      emit('created', Obj.fromObject(data))
     } catch (e) {
       nikkToast.httpError(e as AxiosError)
     } finally {

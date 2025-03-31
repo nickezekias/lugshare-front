@@ -3,8 +3,10 @@ import { onMounted, ref } from 'vue'
 
 import NikkToast from '@/app/utils/NikkToast'
 import Obj from '@/app/models/spaceListing.model'
+import SpaceBookingRequest from '@/app/models/spaceBookingRequest.model'
 import { useAccountStore } from '@/stores/account.store'
 import { useListingStore } from '@/stores/listing.store'
+import { useSpaceBookingRequestStore } from '@/stores/space-booking-request.store'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue'
@@ -15,15 +17,18 @@ import AppPageTitle from '@/components/pages/AppPageTitle.vue'
 import ShowSpaceOfferComponent from '@/components/listings/ShowSpaceOfferComponent.vue'
 import SpaceBookingCreateView from '@/app/features/listing/presentation/space-booking-request/CreateView.vue'
 import SpaceBookingIndexView from '@/app/features/listing/presentation/space-booking-request/IndexView.vue'
+import SpaceBookingRequestCard from '@/components/listings/SpaceBookingRequestCard.vue'
 
 const accountStore = useAccountStore()
 const objStore = useListingStore()
 const router = useRouter()
+const spaceBookingRequestStore = useSpaceBookingRequestStore()
 const toast = useToast()
 const { t } = useI18n()
 
 const nikkToast = new NikkToast(toast, t)
 
+const existingSbrForAuthUser = ref<SpaceBookingRequest | null>(null)
 const obj = ref(Obj.initEmpty())
 const pageLoading = ref(false)
 
@@ -32,8 +37,22 @@ onMounted(async () => {
     pageLoading.value = true
     await objStore.getSpaceOfferListing(router.currentRoute.value.params.id as string)
     obj.value = objStore.spaceListing
+    existingSbrForAuthUser.value = await spaceBookingRequestStore.getByCurrentUser()
   } catch (e) {
-    nikkToast.httpError(e as AxiosError)
+    if ((e as AxiosError).response?.status === 404) {
+      //@ts-expect-error - AxiosError type does not have response.data.message
+      if ((e as AxiosError).response?.data?.message.includes('SpaceBookingRequest')) {
+        return
+        //@ts-expect-error - AxiosError type does not have response.data.message
+      } else if ((e as AxiosError).response?.data?.message.includes('SpaceOfferListing')) {
+        router.push({
+          name: 'notFound',
+          query: { redirect: 'listings.index', name: 'features.listings.show.backToListings' },
+        })
+      }
+    } else {
+      nikkToast.httpError(e as AxiosError)
+    }
   } finally {
     pageLoading.value = false
   }
@@ -65,12 +84,28 @@ onMounted(async () => {
         </template>
 
         <template #content>
-          <div>
+          <div class="pt-4">
             <SpaceBookingCreateView
-              v-if="!objStore.spaceListing.isOwner(accountStore.user?.id)"
-              class="mt-4"
+              v-if="
+                !objStore.spaceListing.isOwner(accountStore.user?.id) && !existingSbrForAuthUser
+              "
+              @created="
+                (sbr: SpaceBookingRequest) => {
+                  existingSbrForAuthUser = sbr
+                }
+              "
             />
-            <SpaceBookingIndexView v-else class="mt-4" />
+
+            <SpaceBookingRequestCard
+              v-else-if="
+                !objStore.spaceListing.isOwner(accountStore.user?.id) && existingSbrForAuthUser
+              "
+              @cancel="existingSbrForAuthUser = null"
+              :isOwner="objStore.spaceListing.isOwner(accountStore.user?.id)"
+              :obj="existingSbrForAuthUser"
+            />
+
+            <SpaceBookingIndexView v-else />
           </div>
         </template>
       </PrimeCard>
