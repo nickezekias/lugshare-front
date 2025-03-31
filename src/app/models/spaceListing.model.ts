@@ -187,6 +187,7 @@ export default class SpaceListing {
    * Check if user with userId is the owner of this resource
    */
   public isOwner(userId: string | undefined): boolean {
-    return userId == this.userId
+    if (userId) return userId == this.userId
+    return false
   }
 }
