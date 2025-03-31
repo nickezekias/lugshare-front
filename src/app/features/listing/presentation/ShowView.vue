@@ -37,7 +37,9 @@ onMounted(async () => {
     pageLoading.value = true
     await objStore.getSpaceOfferListing(router.currentRoute.value.params.id as string)
     obj.value = objStore.spaceListing
-    existingSbrForAuthUser.value = await spaceBookingRequestStore.getByCurrentUser()
+    existingSbrForAuthUser.value = await spaceBookingRequestStore.getByCurrentUserAndSpaceOffer(
+      obj.value.id,
+    )
   } catch (e) {
     if ((e as AxiosError).response?.status === 404) {
       //@ts-expect-error - AxiosError type does not have response.data.message

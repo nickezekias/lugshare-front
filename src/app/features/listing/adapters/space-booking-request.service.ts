@@ -27,8 +27,8 @@ const getAll = async function (filter?: DBGetQueryFilter) {
   return await axios.get(`${url}${query}`)
 }
 
-const getByCurrentUser = async function () {
-  return await axios.get(`${url}/current-user`)
+const getByCurrentUserAndSpaceOffer = async function (spaceOfferId: string) {
+  return await axios.get(`${url}/current-user-and-space-offer?spaceOfferId=${spaceOfferId}`)
 }
 
 const update = async function (payload: Obj) {
@@ -47,4 +47,13 @@ const reject = async function (id: string) {
   return await axios.post(`${url}/${id}/reject?_method=PUT`)
 }
 
-export default { create, get, getAll, getByCurrentUser, update, destroy, accept, reject }
+export default {
+  create,
+  get,
+  getAll,
+  getByCurrentUserAndSpaceOffer,
+  update,
+  destroy,
+  accept,
+  reject,
+}

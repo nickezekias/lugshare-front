@@ -23,8 +23,8 @@ export const useSpaceBookingRequestStore = defineStore('spaceBookingRequestStore
     return response.data.data
   }
 
-  async function getByCurrentUser() {
-    const response = await objService.getByCurrentUser()
+  async function getByCurrentUserAndSpaceOffer(spaceOfferId: string) {
+    const response = await objService.getByCurrentUserAndSpaceOffer(spaceOfferId)
     return response.data.data
   }
 
@@ -62,7 +62,7 @@ export const useSpaceBookingRequestStore = defineStore('spaceBookingRequestStore
     create,
     get,
     getAll,
-    getByCurrentUser,
+    getByCurrentUserAndSpaceOffer,
     update,
     destroy,
     acceptBooking,
