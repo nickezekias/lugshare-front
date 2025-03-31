@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const emit = defineEmits(['close', 'deleted'])
 const model = defineModel({ type: Boolean })
-const props = defineProps<{ loading: boolean }>()
+const props = defineProps<{ loading: boolean; message?: string; title?: string }>()
 
 import PrimeDialog from 'primevue/dialog'
 </script>
@@ -12,12 +12,16 @@ import PrimeDialog from 'primevue/dialog'
       <div class="p-4">
         <div class="mb-4">
           <span class="text-lg md:text-xl font-bold">
-            <slot name="title"></slot>
+            <slot name="title">
+              {{ $t(`${props.title}`) }}
+            </slot>
           </span>
         </div>
 
         <PrimeMessage severity="error">
-          <slot name="message"></slot>
+          <slot name="message">
+            {{ $t(`${props.message}`) }}
+          </slot>
         </PrimeMessage>
 
         <div class="col-12 mt-5">
