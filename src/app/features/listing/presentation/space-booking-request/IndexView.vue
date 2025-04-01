@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import NikkToast from '@/app/utils/NikkToast'
+import { useListingStore } from '@/stores/listing.store'
 import { useSpaceBookingRequestStore } from '@/stores/space-booking-request.store'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'primevue'
@@ -8,27 +9,23 @@ import { useToast } from 'primevue'
 import Obj from '@/app/models/spaceBookingRequest.model'
 import type { AxiosError } from 'axios'
 
-// import NikkInputNumber from '@/components/forms/NikkInputNumber.vue'
-import NikkDatePicker from '@/components/forms/NikkDatePicker.vue'
-import NikkTextArea from '@/components/forms/NikkTextArea.vue'
+import SpaceBookingRequestCard from '@/components/listings/SpaceBookingRequestCard.vue'
 
-const emit = defineEmits(['acceptedBooking'])
+const listingStore = useListingStore()
 const objStore = useSpaceBookingRequestStore()
 const { t } = useI18n()
 const toast = useToast()
 
 const nikkToast = new NikkToast(toast, t)
 
-const acceptBookingLoading = ref(false)
 const loading = ref(false)
-const rejectBookingLoading = ref(false)
 
 const objects = ref<Obj[]>([])
 
 onMounted(async () => {
   loading.value = true
   try {
-    await objStore.getAll()
+    await objStore.getAllForSpaceOffer(listingStore.spaceListing.id)
     objects.value = objStore.objList
   } catch (e) {
     nikkToast.httpError(e as AxiosError)
@@ -36,30 +33,6 @@ onMounted(async () => {
     loading.value = false
   }
 })
-
-async function onAcceptBookingLoading(obj: Obj) {
-  acceptBookingLoading.value = true
-  try {
-    const response = await objStore.acceptBooking(obj.id)
-    objects.value = [Obj.fromObject(response.data.data)]
-    emit('acceptedBooking')
-  } catch (e) {
-    nikkToast.httpError(e as AxiosError)
-  } finally {
-    acceptBookingLoading.value = false
-  }
-}
-
-async function onRejectBookingLoading(obj: Obj) {
-  try {
-    rejectBookingLoading.value = true
-    await objStore.rejectBooking(obj.id)
-  } catch (e) {
-    nikkToast.httpError(e as AxiosError)
-  } finally {
-    rejectBookingLoading.value = false
-  }
-}
 </script>
 
 <template>
@@ -87,89 +60,7 @@ async function onRejectBookingLoading(obj: Obj) {
         </div>
       </template>
     </PrimeCard>
-    <PrimeCard class="w-full border" v-for="obj in objStore.objList" :key="obj.id">
-      <template #content>
-        <div class="flex flex-col gap-4">
-          <div class="flex items-center gap-2">
-            <div>
-              <PrimeAvatar :label="obj.user?.initials" shape="circle" class="h-8 w-8 text-sm" />
-            </div>
 
-            <div class="text-sm text-nowrap text-gray-500 dark:text-gray-400">
-              {{ obj.user?.fullName }}
-            </div>
-          </div>
-
-          <!-- <NikkInputNumber
-            v-model="obj.desiredWeight"
-            id="desiredWeight"
-            error-help-label="''"
-            :is-error="false"
-            label="labels.desiredWeight"
-            :min="1"
-            name="desiredWeight"
-            :readonly="true"
-            :show-buttons="true"
-          /> -->
-
-          <NikkTextArea
-            v-model="obj.shipmentItems"
-            class="w-full"
-            :errorHelpLabel="''"
-            id="shipmentItems"
-            :isError="false"
-            label="labels.shipmentItems"
-            name="shipmentItems"
-            :readonly="true"
-            :rows="2"
-          />
-
-          <NikkDatePicker
-            v-model="obj.itemsPickupDate"
-            :errorHelpLabel="''"
-            id="requestShipmentDate"
-            :isError="false"
-            label="labels.shipmentItemsPickupDate"
-            name="itemsPickupDate"
-            :readonly="true"
-            selectionMode="single"
-          />
-
-          <NikkTextArea
-            v-model="obj.itemsPickupLocation"
-            :errorHelpLabel="''"
-            id="itemsPickupLocation"
-            :isError="false"
-            label="labels.shipmentItemsPickupLocation(s)"
-            name="itemsPickupLocation"
-            :readonly="true"
-            type="text"
-          />
-
-          <div class="flex flex-col gap-2">
-            <PrimeButton
-              @click="onAcceptBookingLoading(obj)"
-              icon="pi pi-check-circle"
-              class="w-full"
-              :label="$t('labels.accept')"
-              :loading="acceptBookingLoading"
-              size="small"
-              type="submit"
-            />
-
-            <PrimeButton
-              @click="onRejectBookingLoading(obj)"
-              icon="pi pi-times"
-              class="w-full"
-              :label="$t('labels.reject')"
-              :loading="rejectBookingLoading"
-              severity="danger"
-              size="small"
-              type="submit"
-            />
-          </div>
-        </div>
-      </template>
-    </PrimeCard>
+    <SpaceBookingRequestCard v-for="obj in objStore.objList" :key="obj.id" :obj="obj" />
   </div>
 </template>
