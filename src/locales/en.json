@@ -12,7 +12,10 @@
   "constants": {
     "statuses": {
       "available": "Available",
-      "open": "Open"
+      "booked": "Booked",
+      "open": "Open",
+      "rejected": "Rejected",
+      "Unavailable": "Unavailable"
     }
   },
   "errors": {

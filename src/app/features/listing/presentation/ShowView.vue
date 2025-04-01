@@ -103,7 +103,6 @@ onMounted(async () => {
                 !objStore.spaceListing.isOwner(accountStore.user?.id) && existingSbrForAuthUser
               "
               @cancel="existingSbrForAuthUser = null"
-              :isOwner="objStore.spaceListing.isOwner(accountStore.user?.id)"
               :obj="existingSbrForAuthUser"
             />
 

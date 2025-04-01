@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import NikkToast from '@/app/utils/NikkToast'
+import { onMounted, ref } from 'vue'
+import { useAccountStore } from '@/stores/account.store'
+import { useListingStore } from '@/stores/listing.store'
 import { useSpaceBookingRequestStore } from '@/stores/space-booking-request.store'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'primevue'
 
 import { DateTimeUtil } from '@/app/utils/DateTimeUtil'
+import NikkToast from '@/app/utils/NikkToast'
 import Obj from '@/app/models/spaceBookingRequest.model'
 import type { AxiosError } from 'axios'
 
@@ -16,9 +18,10 @@ import NikkTextArea from '@/components/forms/NikkTextArea.vue'
 const emit = defineEmits(['accept', 'cancel'])
 const props = defineProps<{
   obj: Obj
-  isOwner: boolean // is current user the author of this space booking request
 }>()
 
+const accountStore = useAccountStore()
+const listingStore = useListingStore()
 const objStore = useSpaceBookingRequestStore()
 const { t } = useI18n()
 const toast = useToast()
@@ -28,7 +31,12 @@ const nikkToast = new NikkToast(toast, t)
 const acceptBookingLoading = ref(false)
 const deleteDialogLoading = ref(false)
 const isDeleteDialog = ref(false)
+const isSpaceOfferOwner = ref(false)
 const rejectBookingLoading = ref(false)
+
+onMounted(() => {
+  isSpaceOfferOwner.value = listingStore.spaceListing.isOwner(accountStore.user?.id)
+})
 
 async function onAcceptBookingLoading(obj: Obj) {
   acceptBookingLoading.value = true
@@ -128,7 +136,7 @@ async function onRejectBookingLoading(obj: Obj) {
           type="text"
         />
 
-        <div v-if="isOwner" class="flex flex-col gap-2">
+        <div v-if="isSpaceOfferOwner" class="flex flex-col gap-2">
           <PrimeButton
             @click="onAcceptBookingLoading(obj)"
             icon="pi pi-check-circle"
