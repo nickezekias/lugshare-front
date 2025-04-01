@@ -15,7 +15,7 @@ const get = async function (id: string) {
   return await axios.get(`${url}/${id}`)
 }
 
-const getAll = async function (filter?: DBGetQueryFilter) {
+const getAllForSpaceOffer = async function (spaceOfferId: string, filter?: DBGetQueryFilter) {
   if (!filter) {
     filter = {
       itemsPerPage: -1,
@@ -24,7 +24,7 @@ const getAll = async function (filter?: DBGetQueryFilter) {
     }
   }
   const query = getQueryFromFilter(filter)
-  return await axios.get(`${url}${query}`)
+  return await axios.get(`${url}${query}&spaceOfferId=${spaceOfferId}`)
 }
 
 const getByCurrentUserAndSpaceOffer = async function (spaceOfferId: string) {
@@ -50,7 +50,7 @@ const reject = async function (id: string) {
 export default {
   create,
   get,
-  getAll,
+  getAllForSpaceOffer,
   getByCurrentUserAndSpaceOffer,
   update,
   destroy,

@@ -28,8 +28,8 @@ export const useSpaceBookingRequestStore = defineStore('spaceBookingRequestStore
     return response.data.data
   }
 
-  async function getAll(filter?: DBGetQueryFilter) {
-    const response = await objService.getAll(filter)
+  async function getAllForSpaceOffer(spaceOfferId: string, filter?: DBGetQueryFilter) {
+    const response = await objService.getAllForSpaceOffer(spaceOfferId, filter)
     objList.value = response.data.data
   }
 
@@ -61,7 +61,7 @@ export const useSpaceBookingRequestStore = defineStore('spaceBookingRequestStore
 
     create,
     get,
-    getAll,
+    getAllForSpaceOffer,
     getByCurrentUserAndSpaceOffer,
     update,
     destroy,
