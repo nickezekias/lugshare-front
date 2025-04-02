@@ -13,6 +13,8 @@ import { useToast } from 'primevue'
 
 import type { AxiosError } from 'axios'
 
+import PrimeSelectButton, { type SelectButtonChangeEvent } from 'primevue/selectbutton'
+
 import AppPageTitle from '@/components/pages/AppPageTitle.vue'
 import ShowSpaceOfferComponent from '@/components/listings/ShowSpaceOfferComponent.vue'
 import SpaceBookingCreateView from '@/app/features/listing/presentation/space-booking-request/CreateView.vue'
@@ -31,6 +33,11 @@ const nikkToast = new NikkToast(toast, t)
 const existingSbrForAuthUser = ref<SpaceBookingRequest | null>(null)
 const obj = ref(Obj.initEmpty())
 const pageLoading = ref(false)
+const sbrStatusFilter = ref(SpaceBookingRequest.STATUSES.PENDING)
+const sbrListFilterOptions = ref([
+  SpaceBookingRequest.STATUSES.PENDING,
+  SpaceBookingRequest.STATUSES.REJECTED,
+])
 
 onMounted(async () => {
   try {
@@ -59,6 +66,12 @@ onMounted(async () => {
     pageLoading.value = false
   }
 })
+
+function onSbrListFilterChange(event: SelectButtonChangeEvent) {
+  sbrStatusFilter.value = event.value
+  const filteredList = spaceBookingRequestStore.filterObjectsByStatus(event.value)
+  spaceBookingRequestStore.setFilteredOjbList(filteredList)
+}
 </script>
 
 <template>
@@ -82,11 +95,42 @@ onMounted(async () => {
           <h3 v-if="objStore.spaceListing.isOwner(accountStore.user?.id)">
             {{ $t('labels.spaceBookingRequest', 2) }}
           </h3>
+
           <h3 v-else>{{ $t('labels.bookSpace') }}</h3>
         </template>
 
         <template #content>
-          <div class="pt-4">
+          <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-1">
+              <PrimeSelectButton
+                @change="onSbrListFilterChange"
+                v-model="sbrStatusFilter"
+                class="ms-auto"
+                :multiple="false"
+                :options="sbrListFilterOptions"
+              >
+                <template #option="slotProps">
+                  <span>{{ $t(`constants.statuses.${slotProps.option}`) }}</span>
+                </template>
+              </PrimeSelectButton>
+
+              <p class="capitalize text-right text-muted-color text-sm">
+                {{ $t('labels.pending') }}
+                {{
+                  spaceBookingRequestStore.filterObjectsByStatus(
+                    SpaceBookingRequest.STATUSES.PENDING,
+                  ).length
+                }}
+                <span class="mx-1">|</span>
+                {{ $t('labels.rejected') }}
+                {{
+                  spaceBookingRequestStore.filterObjectsByStatus(
+                    SpaceBookingRequest.STATUSES.REJECTED,
+                  ).length
+                }}
+              </p>
+            </div>
+
             <SpaceBookingCreateView
               v-if="
                 !objStore.spaceListing.isOwner(accountStore.user?.id) && !existingSbrForAuthUser
@@ -103,7 +147,7 @@ onMounted(async () => {
                 !objStore.spaceListing.isOwner(accountStore.user?.id) && existingSbrForAuthUser
               "
               @cancel="existingSbrForAuthUser = null"
-              :obj="existingSbrForAuthUser"
+              :obj="SpaceBookingRequest.fromObject(existingSbrForAuthUser)"
             />
 
             <SpaceBookingIndexView v-else />
