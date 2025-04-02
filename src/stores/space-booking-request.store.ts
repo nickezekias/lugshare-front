@@ -52,8 +52,10 @@ export const useSpaceBookingRequestStore = defineStore('spaceBookingRequestStore
 
   async function rejectBooking(id: string) {
     const response = await objService.reject(id)
-    updateObjectsList({ deleteId: ref(id), objects: objList })
-    return response.data.data
+    updateObjectsList({ editData: ref({ id: id }), newData: response.data.data, objects: objList })
+    const rejectedList = filterObjectsByStatus(Obj.STATUSES.PENDING)
+    setFilteredOjbList(rejectedList)
+    console.log('REJECT_RES', response.data.data)
   }
 
   function filterObjectsByStatus(status: string) {
