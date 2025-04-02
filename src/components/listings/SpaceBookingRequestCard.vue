@@ -80,6 +80,11 @@ async function onRejectBookingLoading(obj: Obj) {
   <PrimeCard class="w-full border">
     <template #content>
       <div class="flex flex-col gap-4">
+        <PrimeTag
+          class="ms-auto"
+          :severity="props.obj.getStatusTagSeverity()"
+          :value="$t(`constants.statuses.${props.obj.status}`)"
+        />
         <div class="flex items-center gap-2">
           <div>
             <PrimeAvatar :label="props.obj.user?.initials" shape="circle" class="h-8 w-8 text-sm" />
