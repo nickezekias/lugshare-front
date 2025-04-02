@@ -68,9 +68,11 @@ onMounted(async () => {
 })
 
 function onSbrListFilterChange(event: SelectButtonChangeEvent) {
-  sbrStatusFilter.value = event.value
-  const filteredList = spaceBookingRequestStore.filterObjectsByStatus(event.value)
-  spaceBookingRequestStore.setFilteredOjbList(filteredList)
+  if (objStore.spaceListing.isOwner(accountStore.user?.id)) {
+    sbrStatusFilter.value = event.value
+    const filteredList = spaceBookingRequestStore.filterObjectsByStatus(event.value)
+    spaceBookingRequestStore.setFilteredOjbList(filteredList)
+  }
 }
 </script>
 
@@ -79,18 +81,18 @@ function onSbrListFilterChange(event: SelectButtonChangeEvent) {
     <AppPageTitle title="features.listings.show.title" subtitle="features.listings.show.titleDesc">
     </AppPageTitle>
 
-    <div class="flex">
-      <PrimeCard class="w-full md:w-7/12 lg:w-6/12 nikk-card">
+    <div class="flex flex-col md:flex-row gap-4">
+      <PrimeCard class="w-full md:w-7/12 lg:w-6/12 nikk-card order-2 md:order-1">
         <template #content>
           <PrimeSkeleton width="100%" height="32rem" v-if="pageLoading" />
           <ShowSpaceOfferComponent v-else :data="obj" />
         </template>
       </PrimeCard>
 
-      <div v-if="pageLoading" class="w-full md:w-4/12 lg:w-3/12 ms-auto">
+      <div v-if="pageLoading" class="w-full md:w-4/12 lg:w-3/12 ms-auto order-1 md:order-2">
         <PrimeSkeleton width="100%" height="32rem" />
       </div>
-      <PrimeCard v-else class="w-full md:w-4/12 lg:w-3/12 ms-auto shadow-md">
+      <PrimeCard v-else class="w-full md:w-4/12 lg:w-3/12 ms-auto shadow-md order-1 md:order-2">
         <template #title>
           <h3 v-if="objStore.spaceListing.isOwner(accountStore.user?.id)">
             {{ $t('labels.spaceBookingRequest', 2) }}
@@ -101,7 +103,10 @@ function onSbrListFilterChange(event: SelectButtonChangeEvent) {
 
         <template #content>
           <div class="flex flex-col gap-4">
-            <div class="flex flex-col gap-1">
+            <div
+              v-if="objStore.spaceListing.isOwner(accountStore.user?.id)"
+              class="flex flex-col gap-1"
+            >
               <PrimeSelectButton
                 @change="onSbrListFilterChange"
                 v-model="sbrStatusFilter"
