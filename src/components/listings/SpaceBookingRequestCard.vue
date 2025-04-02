@@ -141,7 +141,15 @@ async function onRejectBookingLoading(obj: Obj) {
           type="text"
         />
 
-        <div v-if="isSpaceOfferOwner" class="flex flex-col gap-2">
+        <div
+          v-if="
+            isSpaceOfferOwner &&
+            !(
+              props.obj.status == Obj.STATUSES.ACCEPTED || props.obj.status == Obj.STATUSES.REJECTED
+            )
+          "
+          class="flex flex-col gap-2"
+        >
           <PrimeButton
             @click="onAcceptBookingLoading(obj)"
             icon="pi pi-check-circle"
@@ -164,7 +172,14 @@ async function onRejectBookingLoading(obj: Obj) {
           />
         </div>
 
-        <div v-else>
+        <div
+          v-else-if="
+            !isSpaceOfferOwner &&
+            !(
+              props.obj.status == Obj.STATUSES.ACCEPTED || props.obj.status == Obj.STATUSES.REJECTED
+            )
+          "
+        >
           <PrimeButton
             @click="isDeleteDialog = true"
             :loading="deleteDialogLoading"
