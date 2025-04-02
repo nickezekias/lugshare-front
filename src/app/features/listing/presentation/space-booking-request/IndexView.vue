@@ -20,13 +20,12 @@ const nikkToast = new NikkToast(toast, t)
 
 const loading = ref(false)
 
-const objects = ref<Obj[]>([])
-
 onMounted(async () => {
   loading.value = true
   try {
     await objStore.getAllForSpaceOffer(listingStore.spaceListing.id)
-    objects.value = objStore.objList
+    const pendingObjList = objStore.filterObjectsByStatus(Obj.STATUSES.PENDING)
+    objStore.setFilteredOjbList(pendingObjList)
   } catch (e) {
     nikkToast.httpError(e as AxiosError)
   } finally {
@@ -61,6 +60,10 @@ onMounted(async () => {
       </template>
     </PrimeCard>
 
-    <SpaceBookingRequestCard v-for="obj in objStore.objList" :key="obj.id" :obj="obj" />
+    <SpaceBookingRequestCard
+      v-for="obj in objStore.filteredObjList"
+      :key="obj.id"
+      :obj="Obj.fromObject(obj)"
+    />
   </div>
 </template>

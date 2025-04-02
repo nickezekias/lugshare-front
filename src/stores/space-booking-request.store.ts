@@ -9,6 +9,7 @@ import type { DBGetQueryFilter } from '@/app/@types/common.interface'
 
 export const useSpaceBookingRequestStore = defineStore('spaceBookingRequestStore', () => {
   const objList = ref<Obj[]>([])
+  const filteredObjList = ref<Obj[]>([])
   const obj = ref(Obj.initEmpty())
 
   const { updateObjectsList } = useDataTableUtil()
@@ -55,7 +56,16 @@ export const useSpaceBookingRequestStore = defineStore('spaceBookingRequestStore
     return response.data.data
   }
 
+  function filterObjectsByStatus(status: string) {
+    return objList.value.filter((obj: Obj) => obj.status === status)
+  }
+
+  function setFilteredOjbList(list: Obj[]) {
+    filteredObjList.value = list
+  }
+
   return {
+    filteredObjList,
     obj,
     objList,
 
@@ -67,5 +77,8 @@ export const useSpaceBookingRequestStore = defineStore('spaceBookingRequestStore
     destroy,
     acceptBooking,
     rejectBooking,
+
+    filterObjectsByStatus,
+    setFilteredOjbList,
   }
 })
