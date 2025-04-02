@@ -8,9 +8,16 @@ export default class SpaceBookingRequest {
   itemsPickupLocation: string
   spaceOfferId: string
   shipmentItems: string
+  status: string
   updatedAt: string
   userId: string
   user: ListingOwner | null
+
+  public static readonly STATUSES = {
+    PENDING: 'pending',
+    ACCEPTED: 'accepted',
+    REJECTED: 'rejected',
+  }
 
   public constructor(
     createdAt: string,
@@ -20,6 +27,7 @@ export default class SpaceBookingRequest {
     itemsPickupLocation: string,
     spaceOfferId: string,
     shipmentItems: string,
+    status: string,
     updatedAt: string,
     userId: string,
     user: ListingOwner | null,
@@ -31,6 +39,7 @@ export default class SpaceBookingRequest {
     this.itemsPickupLocation = itemsPickupLocation
     this.spaceOfferId = spaceOfferId
     this.shipmentItems = shipmentItems
+    this.status = status
     this.updatedAt = updatedAt
     this.userId = userId
     this.user = user
@@ -44,6 +53,7 @@ export default class SpaceBookingRequest {
     itemsPickupLocation: string
     spaceOfferId: string
     shipmentItems: string
+    status: string
     updatedAt: string
     userId: string
     user: ListingOwner | null
@@ -56,6 +66,7 @@ export default class SpaceBookingRequest {
       data.itemsPickupLocation,
       data.spaceOfferId,
       data.shipmentItems,
+      data.status,
       data.updatedAt,
       data.userId,
       data.user,
@@ -63,7 +74,19 @@ export default class SpaceBookingRequest {
   }
 
   static initEmpty(): SpaceBookingRequest {
-    return new SpaceBookingRequest('', 0, '', '', '', '', '', '', '', null)
+    return new SpaceBookingRequest(
+      '',
+      0,
+      '',
+      '',
+      '',
+      '',
+      '',
+      SpaceBookingRequest.STATUSES.PENDING,
+      '',
+      '',
+      null,
+    )
   }
 
   /*
@@ -74,5 +97,18 @@ export default class SpaceBookingRequest {
       return `${this.user.firstName} ${this.user.lastName.charAt(0)}.`
     }
     return ''
+  }
+
+  public getStatusTagSeverity() {
+    switch (this.status) {
+      case SpaceBookingRequest.STATUSES.PENDING:
+        return 'warn'
+      case SpaceBookingRequest.STATUSES.ACCEPTED:
+        return 'success'
+      case SpaceBookingRequest.STATUSES.REJECTED:
+        return 'danger'
+      default:
+        return 'info'
+    }
   }
 }
